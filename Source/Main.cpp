@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include "header.h"
+#include "../lib/header.h"
 using namespace std;
 
 
