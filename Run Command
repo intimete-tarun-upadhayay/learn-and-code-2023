@@ -1,0 +1,4 @@
+g++ Source/*.cpp -Iheader -o KaprekarConstant.out
+g++ test/*.cpp Source/Find_Number_follow_Kaprekar_Constant.cpp -lgtest -Iheader -o Test
+./KaprekarConstant.out
+./Test
