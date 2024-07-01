@@ -1,5 +1,5 @@
 import PromptSync from "prompt-sync";
-import { Socket } from "socket.io-client";
+import { Socket, io } from "socket.io-client";
 import { MenuItem } from "../types/menuItem";
 import MenuItemService from "../services/menuItem";
 import { exit } from "process";
@@ -20,25 +20,27 @@ let menuItemService: MenuItemService;
 // }
 
 function handleAdminMenuAction(io:Socket): void {
-    console.log(`1. Add Menu Item
-                 2. See Menu Item
-                 3. Update Menu Item
-                 4. Delete Menu Item
-                 5. Exit`);
+    console.log(`
+    1. Add Menu Item
+    2. See Menu Item
+    3. Update Menu Item
+    4. Delete Menu Item
+    5. Exit
+    `);
     menuItemService = new MenuItemService(io);
     const adminAction = prompt("Choose Option from above : ");
     switch (adminAction) {
         case '1':
-            addMenuItem();
+            addMenuItem(io);
             break;
         case '2':
-            seeMenuItem();
+            seeMenuItem(io);
             break;
         case '3':
-            updateMenuItem();
+            updateMenuItem(io);
             break;
         case '4':
-            deleteMenuItem();
+            deleteMenuItem(io);
             break;
         case '5':
             exit();
@@ -51,7 +53,7 @@ function handleAdminMenuAction(io:Socket): void {
 }
 
 
-const addMenuItem = async () =>{
+const addMenuItem = async (io:Socket) =>{
     const foodName = prompt("Enter Food Name : ");
     const foodPrice = prompt("Enter Food Price : ");
     const foodAvailabilityStatus = prompt("Enter Food Availability Status : ");
@@ -69,13 +71,11 @@ const addMenuItem = async () =>{
     } catch (error: any) {
         console.error('Failed to add menu item:', error.message);
     }
-    
+    handleAdminMenuAction(io);
 }
-const seeMenuItem = async () =>{
+const seeMenuItem = async (io:Socket) =>{
     try {
-        const MenuItems: any = await menuItemService.getMenuItems();
-        console.log(MenuItems[0]);
-        
+        const MenuItems: any = await menuItemService.getMenuItems();       
         const menuItemsDiaplay = MenuItems[0].map((item: any,index:number) => {
             let availability,foodItemType;
             if(item.availabilityStatus == 1)
@@ -105,21 +105,21 @@ const seeMenuItem = async () =>{
                 foodItemType: foodItemType
             }
         })
-        console.log(menuItemsDiaplay);
         
         console.table(menuItemsDiaplay);
         console.log('Menu item fetched successfully.');
     } catch (error) {
         console.error('Failed to fetch menu item:', error.message);
     }
+    handleAdminMenuAction(io);
 }
-const updateMenuItem = async () =>{
+const updateMenuItem = async (io:Socket) =>{
     const foodItemId = prompt("Enter Food Item ID for Updated Item : ");
     let updateFoodItem = {};
     let updatedValue;
     const updatedField = prompt("Enter name of field you want update : ");
     switch (updatedField) {
-        case 'foodName':
+        case 'itemName':
             updatedValue = prompt("Enter updated value : ");
             updateFoodItem = {updatedField,updatedValue}
             break;
@@ -144,14 +144,16 @@ const updateMenuItem = async () =>{
     } catch (error) {
         console.error('Failed to update menu item:', error.message);
     }
+    handleAdminMenuAction(io);
 }
-const deleteMenuItem = async () =>{
+const deleteMenuItem = async (io:Socket) =>{
     const foodItemId = prompt("Enter Food Item ID for Updated Item : ");
     try {
         const deleteMenuItem = await menuItemService.deleteMenuItem(+foodItemId);
     } catch (error) {
         console.error('Failed to update menu item:', error);
     }
+    handleAdminMenuAction(io);
 }
 
 
