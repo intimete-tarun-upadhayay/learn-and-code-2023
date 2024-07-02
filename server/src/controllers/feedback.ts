@@ -37,10 +37,18 @@ class FeedbackController {
         }
     };
 
-    public updateFeedback = async (socket: Socket, data: any): Promise<void> => {
-        // const {item_id, user_id, rating, comment, feedback_date } = data;
+    public getFeedbackByCategoryId = async (socket: Socket, CategoryItemType: any): Promise<void> => {
         try {
-            const feedback = await this.feedbackService.updateFeedback(data,+data.feedbackId);
+            const feedback = await this.feedbackService.getFeedbackByCategoryId(+CategoryItemType);
+            socket.emit('getFeedbackByCategoryIdSuccess', feedback);
+        } catch (error) {
+            socket.emit('getFeedbackByCategoryIdError', { error: error.message });
+        }
+    };
+
+    public updateFeedback = async (socket: Socket, data: any): Promise<void> => {
+        try {
+            const feedback = await this.feedbackService.updateFeedback(data);
             socket.emit('updateFeedbackSuccess', feedback);
         } catch (error) {
             socket.emit('updateFeedbackError', { error: error.message });
@@ -55,7 +63,7 @@ class FeedbackController {
         } catch (error) {
             socket.emit('deleteFeedbackError', { error: error.message });
         }
-    };6.
+    };
 }
 
 

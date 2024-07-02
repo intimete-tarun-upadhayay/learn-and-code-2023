@@ -10,7 +10,6 @@ class FeedbackService {
     }
 
     public async createFeedback(newFeedback): Promise<Feedback> {
-        console.log("client feeback");
         return new Promise((resolve, reject) => {
             
             this.socket.emit('createFeedback', newFeedback);
@@ -53,9 +52,23 @@ class FeedbackService {
         });
     }
 
-    public async updateFeedback(feedback_id: number, item_id: number, user_id: number, rating: number, comment: string, feedback_date: Date): Promise<Feedback> {
+    public async getFeedbackByCategoryId(CategoryItemType: number): Promise<Feedback> {
         return new Promise((resolve, reject) => {
-            this.socket.emit('updateFeedback', { feedback_id, item_id, user_id, rating, comment, feedback_date });
+            this.socket.emit('getFeedbackByCategoryId', { CategoryItemType });
+
+            this.socket.on('getFeedbackByCategoryIdSuccess', (data: Feedback) => {
+                resolve(data);
+            });
+
+            this.socket.on('getFeedbackByCategoryIdError', (error: any) => {
+                reject(new Error(error.message || 'Failed to fetch feedback'));
+            });
+        });
+    }
+
+    public async updateFeedback(feedbackId, updatedField, updatedValue): Promise<Feedback> {
+        return new Promise((resolve, reject) => {
+            this.socket.emit('updateFeedback', { feedbackId, updatedField, updatedValue });
 
             this.socket.on('updateFeedbackSuccess', (data: Feedback) => {
                 resolve(data);

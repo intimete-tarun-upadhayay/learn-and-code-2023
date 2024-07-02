@@ -7,16 +7,15 @@ class RecommendationEngineServices {
         this.socket = io;
     }
 
-    public async login(username:string,password:string):Promise<any> {
+    public async recommendationEngine(FoodItemCategory:any):Promise<any> {
         return new Promise((resolve, reject) => {
-            this.socket.emit('login', { username, password })
+            this.socket.emit('getRecommendedItems', FoodItemCategory)
 
-            this.socket.on('authSuccess', (data) => {
+            this.socket.on('getRecommendedItemsSuccess', (data) => {
                 resolve(data.userId);
             })
-            this.socket.on('authError', (error) => {
-                console.log("LOgin Failed");
-                reject(error);
+            this.socket.on('getRecommendedItemsError', (error) => {
+                reject(new Error(error.message || 'Failed to fetch recommended menu items'));
             })
         });
     }

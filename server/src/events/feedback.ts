@@ -12,25 +12,26 @@ export default class FeedbackEventHandler{
 
     public listen(){
         this.socket.on('createFeedback', async (newFeedback) => {
-            console.log("Working");
-            
-            const addItem = feedbackController.createFeedback(this.socket,newFeedback);
+            const sendFeedback = feedbackController.createFeedback(this.socket,newFeedback);
         });
         
-        this.socket.on('updateFeedback',async(updateFeedbackItem) => {
-            const updateItem = feedbackController.updateFeedback(this.socket,updateFeedbackItem);
+        this.socket.on('updateFeedback',async(feedbackId,) => {
+            const updateFeedback = feedbackController.updateFeedback(this.socket,feedbackId);
         })
 
-        this.socket.on('deleteFeedback',async(deleteItemId) => {
-            const updateItem = feedbackController.deleteFeedback(this.socket,deleteItemId);
+        this.socket.on('deleteFeedback',async(feedbackData) => {
+            const deleteFeedback = feedbackController.deleteFeedback(this.socket,feedbackData);
         })
         
         this.socket.on('getFeedbacks', async() => {
-            const feedbacks = feedbackController.getFeedbacks(this.socket);
+            const getFeedbacks = feedbackController.getFeedbacks(this.socket);
         })
 
         this.socket.on('getFeedbackById', async(feedbackId:any) => {
-            const feedbacks = feedbackController.getFeedbackById(this.socket,feedbackId);
+            const getfeedback = feedbackController.getFeedbackById(this.socket,feedbackId);
+        })
+        this.socket.on('getFeedbackByCategoryId', async(CategoryItemType:any) => {
+            const getfeedback = feedbackController.getFeedbackByCategoryId(this.socket,CategoryItemType);
         })
     }
 }

@@ -24,7 +24,7 @@ export default function handleEmpMenuAction(io:Socket) {
             seeMenuItem(io);
             break;
         case '2':
-            createFeeback(io);
+            getFeedbackByCategoryId(io);
             break;
         case '3':
             // updateMenuItem(io);
@@ -89,11 +89,22 @@ const createFeeback = async (io:Socket) => {
         const feedback = {userId,foodItemId,rating,comment};
         console.log(feedback);
         
-        const feeback = await feedbackService.createFeedback(feedback);
+        const feebackResult = await feedbackService.createFeedback(feedback);
         console.log('Feedback Submitted Successfully.');
 
     } catch (error) {
         console.error('Error submitting feedback:', error.message);
     }
     handleEmpMenuAction(io);
+}
+
+const getFeedbackByCategoryId = async (io:Socket) => {
+    try {
+        const CategoryItemType = prompt("Enter Category Id of Food Item :- ");
+        const feebacks = await feedbackService.getFeedbackByCategoryId(+CategoryItemType);
+        console.table(feebacks);
+        handleEmpMenuAction(io);
+    } catch (error) {
+        console.error('Error in Getting Feedback Item:', error.message);
+    }
 }

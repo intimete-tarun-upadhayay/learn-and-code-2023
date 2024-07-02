@@ -5,6 +5,7 @@ import pool from './src/config/connection';
 import AuthenticationEventHandler from './src/events/authentication';
 import MenuItemEventHandler from './src/events/menuItem';
 import FeedbackEventHandler from './src/events/feedback';
+import RecommendationEngineEventHandler from './src/events/recommendationEngine';
 
 const PORT = 8080;
 const app:Application = express();
@@ -19,8 +20,11 @@ io.on('connection', (socket) => {
   const adminEventHandler = new MenuItemEventHandler(socket);
   adminEventHandler.listen();
 
-  const EmployeeEventHandler = new FeedbackEventHandler(socket);
-  EmployeeEventHandler.listen();
+  const feedbackEventHandler = new FeedbackEventHandler(socket);
+  feedbackEventHandler.listen();
+
+  const RecommendationEventHandler = new RecommendationEngineEventHandler(socket);
+  RecommendationEventHandler.listen();
 });
 
 
