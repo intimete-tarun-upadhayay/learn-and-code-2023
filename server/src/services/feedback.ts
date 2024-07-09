@@ -32,14 +32,10 @@ class FeedbackService {
     }
 
     public getFeedbackByCategoryId = async (CategoryItemType) => {
-        try {
             const connect = pool.getConnection();
-            const feedbacks = await pool.query(`SELECT Review.* FROM Review JOIN FoodItem ON Review.foodItemId = FoodItem.foodItemId WHERE FoodItem.foodItemTypeId = '${CategoryItemType}';`);
+            // console.log(CategoryItemType.CategoryItemType);
+            const feedbacks = await pool.query(`SELECT Review.* FROM Review JOIN FoodItem ON Review.foodItemId = FoodItem.foodItemId WHERE FoodItem.foodItemTypeId = '${CategoryItemType.CategoryItemType}';`);
             return feedbacks;
-            // console.log(feedbacks);
-        } catch (error) {
-            
-        }
     }
 
     // public async getFeedbacksByMenuType(menu_type: number) {

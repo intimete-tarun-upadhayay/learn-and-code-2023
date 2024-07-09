@@ -22,7 +22,7 @@ export default class MenuItemServices {
 
     public getMenuItems = async () => {
         const connect = pool.getConnection();
-        const menuItems = await pool.query(`select itemName, price,availabilityStatus,foodItemTypeId from FoodItem`);
+        const menuItems = await pool.query(`select foodItemId,itemName, price,availabilityStatus,foodItemTypeId from FoodItem`);
         return menuItems;
     }
 }
