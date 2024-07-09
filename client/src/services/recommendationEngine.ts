@@ -12,7 +12,9 @@ class RecommendationEngineServices {
             this.socket.emit('getRecommendedItems', FoodItemCategory)
 
             this.socket.on('getRecommendedItemsSuccess', (data) => {
-                resolve(data.userId);
+                console.log(data);
+                
+                resolve(data);
             })
             this.socket.on('getRecommendedItemsError', (error) => {
                 reject(new Error(error.message || 'Failed to fetch recommended menu items'));

@@ -101,8 +101,20 @@ const createFeeback = async (io:Socket) => {
 const getFeedbackByCategoryId = async (io:Socket) => {
     try {
         const CategoryItemType = prompt("Enter Category Id of Food Item :- ");
-        const feebacks = await feedbackService.getFeedbackByCategoryId(+CategoryItemType);
-        console.table(feebacks);
+        const feedbacks = await feedbackService.getFeedbackByCategoryId(CategoryItemType);
+        console.log(feedbacks[0]);
+        
+        const feedbackDisplay = feedbacks[0].map((item:any,index:number) => {
+            return {
+                reviewId:item.reviewId,
+                userId:item.userId,
+                foodItemId:item.foodItemId,
+                rating:item.rating,
+                comment:item.comment,
+                date:item.date
+            }
+        })
+        console.table(feedbackDisplay);
         handleEmpMenuAction(io);
     } catch (error) {
         console.error('Error in Getting Feedback Item:', error.message);

@@ -35,28 +35,28 @@ export default function handleChefMenuAction(io:Socket) {
 }
 
 
-const proposeDailyMenuItem = (io:Socket) => {
+const proposeDailyMenuItem = async (io:Socket) => {
     console.log(`
     1. Breakfast
     2. Lunch
     3. Dinner
     `);
     const CategoryItemType = prompt("Choose Option from above : ");
-    let recommendatedItem;
-    switch (CategoryItemType) {
-        case '1':
-            recommendatedItem = recommendationEngineServices.recommendationEngine(CategoryItemType);
-            break;
-        case '2':
-            // seeMenuItem(io);
-            break;
-        case '3':
-            // updateMenuItem(io);
-            break;
-        default:
-            // This should never happen since `action` is of type `MenuAction`
-            console.log('Unknown action');
-            break;
-    }
+    const recommendatedItem = await recommendationEngineServices.recommendationEngine(+CategoryItemType);
+    console.log("recommendatedItem",recommendatedItem);
+    // switch (CategoryItemType) {
+    //     case '1':
+    //         break;
+    //     case '2':
+    //         // seeMenuItem(io);
+    //         break;
+    //     case '3':
+    //         // updateMenuItem(io);
+    //         break;
+    //     default:
+    //         // This should never happen since `action` is of type `MenuAction`
+    //         console.log('Unknown action');
+    //         break;
+    // }
     handleChefMenuAction(io);
 }

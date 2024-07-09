@@ -52,7 +52,7 @@ class FeedbackService {
         });
     }
 
-    public async getFeedbackByCategoryId(CategoryItemType: number): Promise<Feedback> {
+    public async getFeedbackByCategoryId(CategoryItemType: any): Promise<Feedback> {
         return new Promise((resolve, reject) => {
             this.socket.emit('getFeedbackByCategoryId', { CategoryItemType });
 
