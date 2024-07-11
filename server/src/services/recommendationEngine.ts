@@ -42,24 +42,6 @@ export default class RecommendationEngineServices {
                 sentiment: this.calculateSentiment(feedback.comment)
             }
         })
-        // console.log(feedbacksWithSentimentScore);
-        
-        // for (const feedback of feedbackData) {
-        //     console.log(feedback);
-            
-            // const feedbackWithSentimentScore = {
-            //     feedback_id: feedback.reviewId_id,
-            //     item_id: feedback.foodItemId,
-            //     user_id: feedback.userId,
-            //     rating: feedback.rating,
-            //     comment: feedback.comment,
-            //     feedback_date: feedback.date,
-            //     sentiment: this.calculateSentiment(feedback.comment)
-            // }
-            // feedbacksWithSentimentScore.push(feedbackWithSentimentScore);
-        // }
-        // console.log("jjjj",feedbacksWithSentimentScore);
-        
         return feedbacksWithSentimentScore;
     }
 
@@ -104,14 +86,6 @@ export default class RecommendationEngineServices {
             .sort((a, b) => b.avgSentimentScore - a.avgSentimentScore)
             .slice(0, 5);
 
-            // console.log(sortedMenuItems);
-
-        // const menuItems = await MenuItem.findAll({
-        //     where: {
-        //         item_id: sortedMenuItems.map(item => item.itemId)
-        //     }
-        // });
-        
         const menuItems = await this.menuItem.getMenuItems();
 
         const menuItemDetails = sortedMenuItems.map((sortedItem) => {
@@ -144,8 +118,6 @@ export default class RecommendationEngineServices {
                 recommendation
             };
         });
-        // console.log(menuItemDetails);
-        
         return menuItemDetails;
     }
 

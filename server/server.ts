@@ -6,6 +6,7 @@ import AuthenticationEventHandler from './src/events/authentication';
 import MenuItemEventHandler from './src/events/menuItem';
 import FeedbackEventHandler from './src/events/feedback';
 import RecommendationEngineEventHandler from './src/events/recommendationEngine';
+import DailyRolloutEventHandler from './src/events/rollOutMenuItem';
 
 const PORT = 8080;
 const app:Application = express();
@@ -25,6 +26,9 @@ io.on('connection', (socket) => {
 
   const RecommendationEventHandler = new RecommendationEngineEventHandler(socket);
   RecommendationEventHandler.listen();
+
+  const RollOutMenuItemEventHandler = new DailyRolloutEventHandler(socket);
+  RollOutMenuItemEventHandler.listen();
 });
 
 

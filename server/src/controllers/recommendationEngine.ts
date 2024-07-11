@@ -9,9 +9,7 @@ export default class RecommendationEngineController {
   }
 
   public recommendationEngine = async (socket: Socket, FoodItemCategory: any) => {
-    const menuItem = await this.recommendationEngineService.getRecommendations(FoodItemCategory);
-    console.log("comyr",menuItem);
-    
+    const menuItem = await this.recommendationEngineService.getRecommendations(FoodItemCategory);    
     try {
       socket.emit('getRecommendedItemsSuccess', menuItem);
     } catch (error) {

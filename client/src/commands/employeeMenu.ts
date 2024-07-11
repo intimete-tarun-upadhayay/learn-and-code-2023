@@ -3,10 +3,12 @@ import { Socket, io } from "socket.io-client";
 import { exit } from "process";
 import MenuItemService from "../services/menuItem";
 import FeedbackService from "../services/feedback";
+import RollOutMenuItemService from "../services/rollOutMenuItem";
 
 const prompt = PromptSync();
 let menuItemService: MenuItemService;
 let feedbackService:FeedbackService;
+let rollOutMenuItemService:RollOutMenuItemService;
 
 export default function handleEmpMenuAction(io:Socket) {
     console.log(`
@@ -18,6 +20,7 @@ export default function handleEmpMenuAction(io:Socket) {
     `);
     menuItemService = new MenuItemService(io);
     feedbackService = new FeedbackService(io);
+    rollOutMenuItemService = new RollOutMenuItemService(io);
     const adminAction = prompt("Choose Option from above : ");
     switch (adminAction) {
         case '1':
@@ -30,6 +33,9 @@ export default function handleEmpMenuAction(io:Socket) {
             // updateMenuItem(io);
             break;
         case '4':
+            getRecommendedFoodItems(io);
+            break;
+        case '5':
             exit();
         default:
             // This should never happen since `action` is of type `MenuAction`
@@ -102,7 +108,6 @@ const getFeedbackByCategoryId = async (io:Socket) => {
     try {
         const CategoryItemType = prompt("Enter Category Id of Food Item :- ");
         const feedbacks = await feedbackService.getFeedbackByCategoryId(CategoryItemType);
-        console.log(feedbacks[0]);
         
         const feedbackDisplay = feedbacks[0].map((item:any,index:number) => {
             return {
@@ -118,5 +123,35 @@ const getFeedbackByCategoryId = async (io:Socket) => {
         handleEmpMenuAction(io);
     } catch (error) {
         console.error('Error in Getting Feedback Item:', error.message);
+    }
+}
+
+const getRecommendedFoodItems = async (io:Socket) => {
+    try {
+        console.log(`
+        1. Breakfast
+        2. Lunch
+        3. Dinner
+        `);
+        const foodItemType = prompt("Choose Food Item Type: ");
+        const currentDate = new Date().toISOString().split('T')[0];
+        console.log(currentDate);
+        const rollOutItems = await rollOutMenuItemService.getDailyRolloutByDateAndCategoryId(+foodItemType,currentDate);
+        const rollOutList = rollOutItems[0].map((item:any,index:number) => {
+            return {
+                id:item.foodItemId,
+                name:item.itemName,
+                price:item.price,
+                availabilityStatus:item.availabilityStatus,
+                foodItemTypeId:item.foodItemTypeId,
+                AveregeSentimentScore:item.AveregeSentimentScore,
+                AveregeRating:item.AveregeRating,
+                recommendation:item.recommendation
+            }
+        })
+        console.table(rollOutList);
+        handleEmpMenuAction(io);
+    } catch (error:any) {
+        console.error('Error:', error.message);
     }
 }
