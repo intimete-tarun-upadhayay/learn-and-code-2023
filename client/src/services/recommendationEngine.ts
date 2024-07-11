@@ -7,13 +7,11 @@ class RecommendationEngineServices {
         this.socket = io;
     }
 
-    public async recommendationEngine(FoodItemCategory:any):Promise<any> {
+    public async recommendationEngine(FoodItemCategory:any,discardedItems:boolean):Promise<any> {
         return new Promise((resolve, reject) => {
-            this.socket.emit('getRecommendedItems', FoodItemCategory)
+            this.socket.emit('getRecommendedItems', {FoodItemCategory,discardedItems})
 
-            this.socket.on('getRecommendedItemsSuccess', (data) => {
-                console.log(data);
-                
+            this.socket.on('getRecommendedItemsSuccess', (data) => {           
                 resolve(data);
             })
             this.socket.on('getRecommendedItemsError', (error) => {

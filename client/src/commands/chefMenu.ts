@@ -33,7 +33,7 @@ export default function handleChefMenuAction(io: Socket) {
       getFeedbackByCategoryId(io);
       break;
     case "4":
-        
+      showDiscardedMenuItem(io);
       break;
     case "5":
       exit();
@@ -52,7 +52,7 @@ const proposeDailyMenuItem = async (io: Socket) => {
     `);
   const CategoryItemType = prompt("Choose Option from above : ");
   const recommendatedItem =
-    await recommendationEngineServices.recommendationEngine(+CategoryItemType);
+    await recommendationEngineServices.recommendationEngine(+CategoryItemType,false);
   console.table(recommendatedItem);
   console.log("Choose Three Food Item From the List :- ");
   const foodItem1 = prompt("Enter 1st Food Id : ");
@@ -65,6 +65,28 @@ const proposeDailyMenuItem = async (io: Socket) => {
   console.log("Selected Food Items :- ");
   console.table(selectedFoodItems);
   let data = await rollOutMenuItemService.createDailyRollout(selectedFoodItems);
+
+  handleChefMenuAction(io);
+};
+
+const showDiscardedMenuItem = async (io: Socket) => {
+  console.log(`
+    1. Breakfast
+    2. Lunch
+    3. Dinner
+    `);
+  const CategoryItemType = prompt("Choose Option from above : ");
+  const recommendatedItem =
+    await recommendationEngineServices.recommendationEngine(+CategoryItemType,true);
+  console.table(recommendatedItem);
+  console.log("Choose Discarded Food Item From the List :- ");
+  const foodItem = prompt("Enter Food Id : ");
+  const selectedFoodItems = recommendatedItem.filter((item) =>
+    item.id === +foodItem
+  );
+  console.log("Selected Food Item :- ");
+  console.table(selectedFoodItems);
+  // let data = await rollOutMenuItemService.createDailyRollout(selectedFoodItems);
 
   handleChefMenuAction(io);
 };

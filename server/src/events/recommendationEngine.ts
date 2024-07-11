@@ -13,8 +13,8 @@ export default class RecommendationEngineEventHandler {
     }
 
     public listen(){
-        this.socket.on('getRecommendedItems', async (FoodItemCategory:number) => {
-            const recommendatedMenuItem = recommendationEngine.recommendationEngine(this.socket,FoodItemCategory);
+        this.socket.on('getRecommendedItems', async (data) => {
+            const recommendatedMenuItem = recommendationEngine.recommendationEngine(this.socket,data);
         });
         
     }

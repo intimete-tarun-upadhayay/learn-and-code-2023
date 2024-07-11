@@ -18,8 +18,6 @@ export default class RollOutMenuItemServices {
   };
 
   public getRollOutMenuItemsByDateAndId = async (id:string,date:any,username:string) => {
-    console.log(date);
-    
     const query = `SELECT 
     rom.foodItemId,
     rom.itemName,
