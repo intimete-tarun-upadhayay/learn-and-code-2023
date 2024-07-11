@@ -23,7 +23,6 @@ export default class DailyRolloutEventHandler {
             await dailyRolloutSocketHandler.getDailyRolloutById(this.socket, data);
         });
         this.socket.on("getDailyRolloutByDateAndId", async (data) => {
-            // console.log('getDailyRolloutByDate', data);
             await dailyRolloutSocketHandler.getDailyRolloutByDateAndId(this.socket, data);
         });
         this.socket.on("updateDailyRollout", async (data) => {

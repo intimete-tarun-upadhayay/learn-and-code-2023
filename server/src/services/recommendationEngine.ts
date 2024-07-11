@@ -30,7 +30,6 @@ export default class RecommendationEngineServices {
 
     private async getFeedbacksWithSentimentScore(CategoryItemType) {
         const feedbacks = await this.feedbackService.getFeedbackByCategoryId({CategoryItemType});
-        // const feebackData = feedbacks[0];
         const feedbacksWithSentimentScore = (feedbacks[0] as any[]).map((feedback:any,index:number) => {
             return {
                 feedback_id: feedback.reviewId_id,

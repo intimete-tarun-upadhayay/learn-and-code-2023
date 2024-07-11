@@ -7,6 +7,7 @@ import MenuItemEventHandler from './src/events/menuItem';
 import FeedbackEventHandler from './src/events/feedback';
 import RecommendationEngineEventHandler from './src/events/recommendationEngine';
 import DailyRolloutEventHandler from './src/events/rollOutMenuItem';
+import DailyMenuItemEventHandler from './src/events/dailyMenuItem';
 
 const PORT = 8080;
 const app:Application = express();
@@ -29,6 +30,9 @@ io.on('connection', (socket) => {
 
   const RollOutMenuItemEventHandler = new DailyRolloutEventHandler(socket);
   RollOutMenuItemEventHandler.listen();
+
+  const dailyMenuItemEventHandler = new DailyMenuItemEventHandler(socket);
+  dailyMenuItemEventHandler.listen();
 });
 
 
