@@ -12,7 +12,7 @@ class RoleOperation {
     }
     
     // chefMenu = new ChefAdminMenu(this.socket);
-    public handleUserRole(role: UserRole,io:Socket): void {
+    public handleUserRole(username:string,role: UserRole,io:Socket): void {
     
         switch (role) {
             case 'admin':
@@ -33,7 +33,7 @@ class RoleOperation {
                 console.log(`------------------------------`);
                 console.log('Successfully Login : Employee');
                 console.log(`------------------------------`);
-                handleEmpMenuAction(this.socket);
+                handleEmpMenuAction(this.socket,username);
                 break;
             default:
                 // This case is not necessary since `role` is restricted to 'admin' | 'chef' | 'employee'

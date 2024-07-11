@@ -50,9 +50,9 @@ class RollOutMenuItemService {
         });
     }
 
-    public async getDailyRolloutByDateAndCategoryId(id: number,date:any): Promise<RollOutMenuItem> {
+    public async getDailyRolloutByDateAndCategoryId(id: number,date:any,username:string): Promise<RollOutMenuItem> {
         return new Promise((resolve, reject) => {
-            this.socket.emit('getDailyRolloutByDateAndId', { id,date });
+            this.socket.emit('getDailyRolloutByDateAndId', { id,date,username});
 
             this.socket.on('getDailyRolloutByDateAndIdSuccess', (data: RollOutMenuItem) => {
                 resolve(data);
