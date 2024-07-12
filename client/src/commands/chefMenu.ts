@@ -93,6 +93,11 @@ const showDiscardedMenuItem = async (io: Socket) => {
 
 const getFeedbackByCategoryId = async (io: Socket) => {
   try {
+    console.log(`
+      1. Breakfast
+      2. Lunch
+      3. Dinner
+      `);
     const CategoryItemType = prompt("Enter Category Id of Food Item :- ");
     const feedbacks = await feedbackService.getFeedbackByCategoryId(
       CategoryItemType

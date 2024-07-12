@@ -40,7 +40,6 @@ class FeedbackController {
     public getFeedbackByCategoryId = async (socket: Socket, CategoryItemType: any): Promise<void> => {
         try {
             const feedback = await this.feedbackService.getFeedbackByCategoryId(CategoryItemType);
-            console.log("feedback",feedback);
             socket.emit('getFeedbackByCategoryIdSuccess', feedback);
         } catch (error) {
             socket.emit('getFeedbackByCategoryIdError', { error: error.message });

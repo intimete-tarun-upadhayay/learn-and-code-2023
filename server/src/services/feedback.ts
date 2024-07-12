@@ -27,7 +27,7 @@ class FeedbackService {
 
     public getFeedbackById = async (feedbackId) => {
         const connect = pool.getConnection();
-        const feedbacks = await pool.query(`select * from Review where reviewId = '${feedbackId}'`);
+        const feedbacks = await pool.query(`select *,DATE(date) from Review where reviewId = '${feedbackId}'`);
         return feedbacks;
     }
 

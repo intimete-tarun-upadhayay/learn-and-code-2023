@@ -7,18 +7,6 @@ import { exit } from "process";
 const prompt = PromptSync();
 let menuItemService: MenuItemService;
 
-// type MenuAction = 
-//   | 'addMenuItem'
-//   | 'seeMenuItem'
-//   | 'updateMenuItem'
-//   | 'deleteMenuItem'
-//   | 'exit';
-
-// interface MenuOption {
-//     name: string;
-//     value: MenuAction;
-// }
-
 function handleAdminMenuAction(io:Socket): void {
     console.log(`
     1. Add Menu Item
