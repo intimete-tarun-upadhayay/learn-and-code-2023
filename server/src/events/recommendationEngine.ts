@@ -16,6 +16,12 @@ export default class RecommendationEngineEventHandler {
         this.socket.on('getRecommendedItems', async (data) => {
             const recommendatedMenuItem = recommendationEngine.recommendationEngine(this.socket,data);
         });
+
+        this.socket.on('getDiscardedMenuItems', async (data) => {
+            console.log("server");
+            
+            const recommendatedMenuItem = recommendationEngine.discardedMenuItem(this.socket,data);
+        });
         
     }
 }

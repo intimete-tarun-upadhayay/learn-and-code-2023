@@ -19,6 +19,21 @@ class RecommendationEngineServices {
             })
         });
     }
+
+    public async discardedMenuItems(FoodItemCategory:any):Promise<any> {
+        return new Promise((resolve, reject) => {
+            console.log("service client",FoodItemCategory);
+            
+            this.socket.emit('getDiscardedMenuItems', {FoodItemCategory})
+
+            this.socket.on('getDiscardedMenuItemsSuccess', (data) => {           
+                resolve(data);
+            })
+            this.socket.on('getDiscardedMenuItemsError', (error) => {
+                reject(new Error(error.message || 'Failed to fetch recommended menu items'));
+            })
+        });
+    }
 }
 
 export default RecommendationEngineServices;

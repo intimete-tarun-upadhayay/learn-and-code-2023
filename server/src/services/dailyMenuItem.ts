@@ -1,10 +1,10 @@
 import pool from '../../src/config/connection';
 
 class DailyMenuItemsService {
-    async createDailyMenuItem(menuId:number, foodItemTypeId:number) {
+    async createDailyMenuItem(menuId:number, foodItemTypeId:number,username:string) {
         try {
             const connect = pool.getConnection();
-            const data = await pool.query(`insert into UserFoodChoose (foodItemId,foodItemTypeId) values('${menuId}','${foodItemTypeId}')`);
+            const data = await pool.query(`insert into UserFoodChoose (userId,foodItemId,foodItemTypeId) values('${username}','${menuId}','${foodItemTypeId}')`);
             (await connect).release();
         } catch (error) {
             throw new Error(error.message);

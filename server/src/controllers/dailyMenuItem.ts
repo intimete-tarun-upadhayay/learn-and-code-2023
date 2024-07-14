@@ -9,9 +9,9 @@ class DailyMenuItemController {
     }
 
     public createDailyMenuItem = async (socket: Socket, data: any): Promise<void> => {
-        const { menuId, foodItemTypeId } = data;
+        const { menuId, foodItemTypeId,username } = data;
         try{
-            await this.dailyMenuItemService.createDailyMenuItem(menuId, foodItemTypeId);
+            await this.dailyMenuItemService.createDailyMenuItem(menuId, foodItemTypeId,username);
             socket.emit('createDailyMenuItemSuccess', "Daily menu item created successfully");
         } catch (error) {
             socket.emit('createDailyMenuItemError', { error: error.message });

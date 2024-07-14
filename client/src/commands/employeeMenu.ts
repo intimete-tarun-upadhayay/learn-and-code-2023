@@ -156,6 +156,7 @@ const getRecommendedFoodItems = async (io: Socket,username:string) => {
     const dailyMenuItem = {
       menuId: foodItems[0].id,
       foodItemTypeId: foodItemType,
+      userId:username
     };
     let data = await dailyMenuService.createDailyMenuItem(dailyMenuItem);
     console.log(data);

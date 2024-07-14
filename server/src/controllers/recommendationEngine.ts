@@ -18,4 +18,15 @@ export default class RecommendationEngineController {
     }
   };
 
+  public discardedMenuItem = async (socket: Socket, data:any) => {
+    const { FoodItemCategory } = data;
+    const menuItem = await this.recommendationEngineService.getDiscardableItems(FoodItemCategory);    
+    try {
+      console.log("server rec -- con");
+      socket.emit('getDiscardedMenuItemsSuccess', menuItem);
+    } catch (error) {
+      socket.emit('getDiscardedMenuItemsError', { error: error.message });
+    }
+  };
+
 }

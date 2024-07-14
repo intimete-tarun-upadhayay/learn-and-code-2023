@@ -77,7 +77,7 @@ const showDiscardedMenuItem = async (io: Socket) => {
     `);
   const CategoryItemType = prompt("Choose Option from above : ");
   const recommendatedItem =
-    await recommendationEngineServices.recommendationEngine(+CategoryItemType,true);
+    await recommendationEngineServices.discardedMenuItems(+CategoryItemType);
   console.table(recommendatedItem);
   console.log("Choose Discarded Food Item From the List :- ");
   const foodItem = prompt("Enter Food Id : ");
