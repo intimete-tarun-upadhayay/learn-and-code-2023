@@ -31,8 +31,8 @@ class DailyRolloutController {
     public getDailyRolloutById = async (socket: Socket, data: any): Promise<void> => {
         const { id } = data;
         try {
-            // const dailyRollout = await this.dailyRolloutService.getDailyRolloutById(id);
-            // socket.emit('getDailyRolloutByIdSuccess', dailyRollout);
+            const dailyRollout = await this.dailyRolloutService.getDailyRolloutById(id);
+            socket.emit('getDailyRolloutByIdSuccess', dailyRollout);
         } catch (error) {
             socket.emit('getDailyRolloutByIdError', { error: error.message });
         }

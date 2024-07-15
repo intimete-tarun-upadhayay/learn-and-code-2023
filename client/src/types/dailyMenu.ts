@@ -1,5 +1,5 @@
 export interface DailyMenu {
-    menuId: number;
-    menuItemDate: string;
-    foodItemTypeId: number;
+    foodItemId: number;
+    foodItemName: string;
+    price: number;
 }

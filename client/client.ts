@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import promptSync from 'prompt-sync';
 import AuthServices from './src/services/authentication';
-import RoleOperation from './src/comman/handleRole';
+import RoleOperation from './src/common/handleRole';
 
 const prompt = promptSync();
 const socket = io('http://localhost:8080');

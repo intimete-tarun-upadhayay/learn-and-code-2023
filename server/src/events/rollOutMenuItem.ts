@@ -11,9 +11,7 @@ export default class DailyRolloutEventHandler {
     }
 
     public listen() {
-        this.socket.on("createDailyRollout", async (data) => {
-            console.log("data",data);
-            
+        this.socket.on("createDailyRollout", async (data) => {          
             await dailyRolloutSocketHandler.createDailyRollout(this.socket, data);
         });
         this.socket.on("getDailyRollouts", async () => {

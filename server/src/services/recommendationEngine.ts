@@ -74,7 +74,7 @@ export default class RecommendationEngineServices {
     return feedbacksWithSentimentScore;
   }
 
-  public async getRecommendations(CategoryItemType, discardedItems: boolean) {
+  public async getRecommendations(CategoryItemType) {
     const feedbacksWithSentimentScore =
       await this.getFeedbacksWithSentimentScore(CategoryItemType);
 
@@ -101,26 +101,7 @@ export default class RecommendationEngineServices {
       menuItemScores[feedback.item_id].count += 1;
     });
 
-    let sortedMenuItems;
-    if (discardedItems) {
-      sortedMenuItems = Object.keys(menuItemScores)
-        .map((key: string) => {
-          const scoreData = menuItemScores[parseInt(key)];
-          const avgRating = scoreData.totalRating / scoreData.count;
-          const avgSentimentScore = scoreData.totalSentiment / scoreData.count;
-          const weightedScore =
-            0.3 * ((avgRating / 5) * 100) + 0.7 * avgSentimentScore;
-          return {
-            itemId: parseInt(key),
-            avgRating,
-            avgSentimentScore,
-            weightedScore,
-          };
-        })
-        .sort((a, b) => a.avgSentimentScore - b.avgSentimentScore)
-        .slice(0, 5);
-    } else {
-      sortedMenuItems = Object.keys(menuItemScores)
+    let sortedMenuItems = Object.keys(menuItemScores)
         .map((key: string) => {
           const scoreData = menuItemScores[parseInt(key)];
           const avgRating = scoreData.totalRating / scoreData.count;
@@ -136,7 +117,6 @@ export default class RecommendationEngineServices {
         })
         .sort((a, b) => b.weightedScore - a.weightedScore)
         .slice(0, 5);
-    }
 
     const menuItems = await this.menuItem.getMenuItems();
 
@@ -249,5 +229,11 @@ export default class RecommendationEngineServices {
     } catch (error) {
       throw new Error(`Error fetching discardable items: ${error.message}`);
     }
+  }
+
+  public async addDiscardableItems(id,name,category,price,availability_status,avg_sentiment_score,avg_rating){
+      const connect = pool.getConnection();
+      const data = await pool.query(`insert into DiscardedMenuItem (foodItemId,itemName,foodItemTypeId,avg_sentiment,avg_rating,availability_status) values('${id}','${name}','${category}','${avg_sentiment_score}','${avg_rating}','${availability_status}')`);
+      (await connect).release();
   }
 }

@@ -4,16 +4,18 @@ import { exit } from "process";
 import RecommendationEngineServices from "../services/recommendationEngine";
 import RollOutMenuItemService from "../services/rollOutMenuItem";
 import FeedbackService from "../services/feedback";
+import DailyMenuItemService from "../services/dailyMenuItem";
 
 const prompt = PromptSync();
 let recommendationEngineServices: RecommendationEngineServices;
 let rollOutMenuItemService: RollOutMenuItemService;
 let feedbackService: FeedbackService;
+let dailyMenu:DailyMenuItemService;
 
 export default function handleChefMenuAction(io: Socket) {
   console.log(`
     1. Propose Daily Menu
-    2. Generate Monthly Feedback Report
+    2. Select Menu Item Tommorrow Menu Item. 
     3. View Feedback
     4. Show Discarded Food Items
     5. Exit
@@ -27,7 +29,7 @@ export default function handleChefMenuAction(io: Socket) {
       proposeDailyMenuItem(io);
       break;
     case "2":
-      // seeMenuItem(io);
+      selectMenuItem(io);
       break;
     case "3":
       getFeedbackByCategoryId(io);
@@ -52,7 +54,7 @@ const proposeDailyMenuItem = async (io: Socket) => {
     `);
   const CategoryItemType = prompt("Choose Option from above : ");
   const recommendatedItem =
-    await recommendationEngineServices.recommendationEngine(+CategoryItemType,false);
+    await recommendationEngineServices.recommendationEngine(+CategoryItemType);
   console.table(recommendatedItem);
   console.log("Choose Three Food Item From the List :- ");
   const foodItem1 = prompt("Enter 1st Food Id : ");
@@ -77,7 +79,7 @@ const showDiscardedMenuItem = async (io: Socket) => {
     `);
   const CategoryItemType = prompt("Choose Option from above : ");
   const recommendatedItem =
-    await recommendationEngineServices.discardedMenuItems(+CategoryItemType);
+    await recommendationEngineServices.getdiscardedMenuItems(+CategoryItemType);
   console.table(recommendatedItem);
   console.log("Choose Discarded Food Item From the List :- ");
   const foodItem = prompt("Enter Food Id : ");
@@ -86,8 +88,8 @@ const showDiscardedMenuItem = async (io: Socket) => {
   );
   console.log("Selected Food Item :- ");
   console.table(selectedFoodItems);
-  // let data = await rollOutMenuItemService.createDailyRollout(selectedFoodItems);
-
+  let data = await recommendationEngineServices.addDiscardedMenuItem(selectedFoodItems[0]);
+  console.log(data);
   handleChefMenuAction(io);
 };
 
@@ -117,5 +119,38 @@ const getFeedbackByCategoryId = async (io: Socket) => {
     handleChefMenuAction(io);
   } catch (error) {
     console.error("Error in Getting Feedback Item:", error.message);
+  }
+};
+
+const selectMenuItem = async (io: Socket) => {
+  try {
+    console.log(`
+      1. Breakfast
+      2. Lunch
+      3. Dinner
+      `);
+    const CategoryItemType = prompt("Enter Category Id of Food Item :- ");
+    const currentDate = new Date().toISOString().split("T")[0];
+    let dailyRollOutItem = await rollOutMenuItemService.getDailyRolloutById(+CategoryItemType);
+    const dailyMenuItems = dailyRollOutItem[0].map((item: any, index: number) => {
+      return {
+        id: item.foodItemId,
+        itemName: item.itemName,
+        price: item.price,
+        category: item.foodItemTypeId,
+        Averege_Sentiment_Score: item.AveregeSentimentScore,
+        recommendation: item.recommendation,
+      };
+    });
+    console.table(dailyMenuItems);
+    console.log("Select Food Item for Next: - ");
+    const foodItemId = prompt("Enter Food Item Id: ");
+    const foodItems = dailyMenuItems.filter((item) => item.id == +foodItemId);
+    dailyMenu.createDailyMenuItem(foodItems);
+    console.log("Selected Food Items :- ");
+    console.table(foodItems);
+    handleChefMenuAction(io);
+  } catch (error) {
+    console.error("Error in Daily Menu Item:", error.message);
   }
 };

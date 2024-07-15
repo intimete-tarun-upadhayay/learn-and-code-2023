@@ -46,4 +46,12 @@ ORDER BY
     (await connect).release();
     return result;
   };
+
+  public getDailyRolloutById = async (categoryId: any) => {
+    const query = `select * from rollOutMenu where foodItemTypeId = '${categoryId}' and date(currentDate) = '2024-07-11';`;
+    const connect = await pool.getConnection();
+    const result = await pool.query(query);
+    (await connect).release();
+    return result;
+  }
 }

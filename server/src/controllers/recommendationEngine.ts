@@ -9,8 +9,8 @@ export default class RecommendationEngineController {
   }
 
   public recommendationEngine = async (socket: Socket, data:any) => {
-    const { FoodItemCategory,discardedItems } = data;
-    const menuItem = await this.recommendationEngineService.getRecommendations(FoodItemCategory,discardedItems);    
+    const { FoodItemCategory } = data;
+    const menuItem = await this.recommendationEngineService.getRecommendations(FoodItemCategory);    
     try {
       socket.emit('getRecommendedItemsSuccess', menuItem);
     } catch (error) {
@@ -22,10 +22,21 @@ export default class RecommendationEngineController {
     const { FoodItemCategory } = data;
     const menuItem = await this.recommendationEngineService.getDiscardableItems(FoodItemCategory);    
     try {
-      console.log("server rec -- con");
       socket.emit('getDiscardedMenuItemsSuccess', menuItem);
     } catch (error) {
       socket.emit('getDiscardedMenuItemsError', { error: error.message });
+    }
+  };
+
+  public addDiscardedMenuItem = async (socket: Socket, data:any) => {
+    console.log("data",data);
+    
+    const { id,name,category,price,availability_status,avg_sentiment_score,avg_rating } = data;
+    await this.recommendationEngineService.addDiscardableItems(id,name,category,price,availability_status,avg_sentiment_score,avg_rating );    
+    try {
+      socket.emit('addDiscardedMenuItemsSuccess', "Discarded Menu Item is added.");
+    } catch (error) {
+      socket.emit('addDiscardedMenuItemsError', { error: error.message });
     }
   };
 
