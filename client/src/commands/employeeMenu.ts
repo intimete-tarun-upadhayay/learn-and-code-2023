@@ -92,21 +92,20 @@ const createFeeback = async (io: Socket,username:string) => {
       `);
   const foodItemType = prompt("Choose Food Item Type: ");
   const foodItemList = await dailyMenuService.getDailyMenuItemById(+foodItemType,username);
-  const foodItems = foodItemList[0].map(async (item: any, index: number) => {
+  const foodItems = await Promise.all(foodItemList[0].map(async (item: any, index: number) => {
     const menuItem = await menuItemService.getMenuItemById(item.foodItemId);
     return {
       id: item.foodItemId,
-      name: menuItem,
+      name: (menuItem[0][0] as any).itemName,
       type: item.foodItemTypeId,
     };
-  });
+  }));
   console.table(foodItems);
-    const userId = prompt("Enter User ID : ");
     const foodItemId = prompt("Enter Food Item ID : ");
     const rating = prompt("Enter Rating between 1-5 : ");
     const comment = prompt("Enter Comment for Food Item : ");
 
-    const feedback = { userId, foodItemId, rating, comment };
+    const feedback = { userId:username, foodItemId, rating, comment };
 
     const feebackResult = await feedbackService.createFeedback(feedback);
     console.log("Feedback Submitted Successfully.");

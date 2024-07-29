@@ -34,7 +34,7 @@ JOIN
     user_preference up ON up.user_id = '${username}'
 WHERE 
     rom.foodItemTypeId = '${id}'
-    AND CURDATE() = '${date}'  
+    AND date(rom.currentdate) = curdate()  
 ORDER BY 
     CASE WHEN fi.dietary_preference = up.isvegetarian THEN 0 ELSE 1 END,
     CASE WHEN fi.state_preference = up.state_preference THEN 0 ELSE 1 END,
@@ -43,6 +43,8 @@ ORDER BY
 `;
     const connect = await pool.getConnection();
     const result = await pool.query(query);
+    console.log(result);
+    
     (await connect).release();
     return result;
   };

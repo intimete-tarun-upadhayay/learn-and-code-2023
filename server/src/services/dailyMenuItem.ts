@@ -25,7 +25,7 @@ class DailyMenuItemsService {
     async getDailyMenuItemByFoodTypeId(foodItemTypeId: number,userId: string) {
         try {
             const connect = pool.getConnection();
-            const data = await pool.query(`SELECT * FROM UserFoodChoose WHERE foodItemTypeId = ${foodItemTypeId} AND DATE(currentDate) = CURDATE() AND userId = '${userId}'`);
+            const data = await pool.query(`SELECT * FROM UserFoodChoose WHERE foodItemTypeId = ${foodItemTypeId} AND DATE(currentDate) = curdate() AND userId = '${userId}'`);            
             return data;
             (await connect).release();
         } catch (error) {

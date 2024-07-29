@@ -36,11 +36,11 @@ class DailyMenuItemService {
         });
     }
 
-    public async getDailyMenuItemById(id: number,userId:string): Promise<DailyMenu> {
+    public async getDailyMenuItemById(foodItemTypeId: number,userId:string): Promise<DailyMenu> {
         return new Promise((resolve, reject) => {
-            this.socket.emit('getDailyMenuItemByFoodTypeId', { id ,userId});
+            this.socket.emit('getDailyMenuItemByFoodTypeId', { foodItemTypeId ,userId});
 
-            this.socket.on('getDailyMenuItemByFoodTypeIdSuccess', (data: DailyMenu) => {
+            this.socket.on('getDailyMenuItemByFoodTypeIdSuccess', (data: any) => {
                 resolve(data);
             });
 
