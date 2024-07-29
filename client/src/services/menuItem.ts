@@ -36,11 +36,11 @@ class MenuItemService {
         });
     }
 
-    public async getMenuItemById(id: number): Promise<MenuItem> {
+    public async getMenuItemById(id: number): Promise<string> {
         return new Promise((resolve, reject) => {
             this.socket.emit('getMenuItemById', { id });
 
-            this.socket.on('getMenuItemByIdSuccess', (data: MenuItem) => {
+            this.socket.on('getMenuItemByIdSuccess', (data: string) => {
                 resolve(data);
             });
 
@@ -52,7 +52,6 @@ class MenuItemService {
 
     public async updateMenuItem(id: number, menuItem: any): Promise<MenuItem> {
         return new Promise((resolve, reject) => {
-            console.log(menuItem)
             this.socket.emit('updateMenuItem', { id, menuItem });
 
             this.socket.on('updateMenuItemSuccess', (data: MenuItem) => {
@@ -69,8 +68,8 @@ class MenuItemService {
         return new Promise((resolve, reject) => {
             this.socket.emit('deleteMenuItem', { id });
 
-            this.socket.on('deleteMenuItemSuccess', () => {
-                resolve();
+            this.socket.on('deleteMenuItemSuccess', (data) => {
+                resolve(data);
             });
 
             this.socket.on('deleteMenuItemError', (error: any) => {

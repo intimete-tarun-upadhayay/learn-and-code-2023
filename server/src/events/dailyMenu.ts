@@ -12,7 +12,6 @@ export default class DailyItemEventHandler {
 
     listen() {
         this.socket.on("createDailyItem", async (data) => {
-            console.log('------------------createDailyMenuItem', data)
             await dailyItemController.createDailyItem(this.socket, data);
         });
         this.socket.on("getDailyItem", async () => {

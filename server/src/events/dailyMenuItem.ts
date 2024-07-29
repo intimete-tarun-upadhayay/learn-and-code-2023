@@ -14,14 +14,11 @@ export default class DailyMenuItemEventHandler {
         this.socket.on("createDailyMenuItem", async (data) => {
             await dailyMenuItemController.createDailyMenuItem(this.socket, data);
         });
-        this.socket.on("getDailyMenuItems", async () => {
-            await dailyMenuItemController.getDailyMenuItems(this.socket);
+        this.socket.on("getDailyMenuItems", async (data) => {
+            await dailyMenuItemController.getDailyMenuItems(this.socket,data);
         });
-        this.socket.on("getDailyMenuItemById", async (data) => {
-            await dailyMenuItemController.getDailyMenuItemById(this.socket, data);
-        });
-        this.socket.on("updateDailyMenuItem", async (data) => {
-            await dailyMenuItemController.updateDailyMenuItem(this.socket, data);
+        this.socket.on("getDailyMenuItemByFoodTypeId", async (data) => {
+            await dailyMenuItemController.getDailyMenuItemByFoodTypeId(this.socket, data);
         });
         this.socket.on("deleteDailyMenuItem", async (data) => {
             await dailyMenuItemController.deleteDailyMenuItem(this.socket, data);

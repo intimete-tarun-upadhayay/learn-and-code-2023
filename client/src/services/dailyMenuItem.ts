@@ -36,15 +36,15 @@ class DailyMenuItemService {
         });
     }
 
-    public async getDailyMenuItemById(id: number): Promise<DailyMenu> {
+    public async getDailyMenuItemById(id: number,userId:string): Promise<DailyMenu> {
         return new Promise((resolve, reject) => {
-            this.socket.emit('getDailyMenuItemById', { id });
+            this.socket.emit('getDailyMenuItemByFoodTypeId', { id ,userId});
 
-            this.socket.on('getDailyMenuItemByIdSuccess', (data: DailyMenu) => {
+            this.socket.on('getDailyMenuItemByFoodTypeIdSuccess', (data: DailyMenu) => {
                 resolve(data);
             });
 
-            this.socket.on('getDailyMenuItemByIdError', (error: any) => {
+            this.socket.on('getDailyMenuItemByFoodTypeIdError', (error: any) => {
                 reject(new Error(error.message || 'Failed to fetch daily menu item'));
             });
         });

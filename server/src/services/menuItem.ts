@@ -2,9 +2,12 @@ import pool from '../../src/config/connection';
 
 export default class MenuItemServices {
 
-    public createMenuItem = async (name, price, availability_status, foodItemTypeId) => {
+    public createMenuItem = async (name, price, availability_status, foodItemTypeId,dietarypreference,
+        spiceLevel,
+        statePreference,
+        isSweet) => {
         const connect = pool.getConnection();
-        const data = await pool.query(`insert into FoodItem (itemName,price,availabilityStatus,foodItemTypeId) values('${name}','${price}','${availability_status}','${foodItemTypeId}')`);
+        const data = await pool.query(`insert into FoodItem (itemName,price,availabilityStatus,foodItemTypeId,dietary_preference,spice_level,state_preference,is_sweet) values('${name}','${price}','${availability_status}','${foodItemTypeId}','${dietarypreference}','${spiceLevel}','${statePreference}','${isSweet}')`);
         (await connect).release();
     }
 
@@ -23,6 +26,12 @@ export default class MenuItemServices {
     public getMenuItems = async () => {
         const connect = pool.getConnection();
         const menuItems = await pool.query(`select foodItemId,itemName, price,availabilityStatus,foodItemTypeId from FoodItem`);
+        return menuItems;
+    }
+
+    public getMenuItemById = async (foodItemId) => {
+        const connect = pool.getConnection();
+        const menuItems = await pool.query(`select itemName from FoodItem where foodItemId = '${foodItemId.id}'`);
         return menuItems;
     }
 }

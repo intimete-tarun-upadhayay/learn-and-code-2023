@@ -5,6 +5,7 @@ import pool from './src/config/connection';
 import AuthenticationEventHandler from './src/events/authentication';
 import MenuItemEventHandler from './src/events/menuItem';
 import FeedbackEventHandler from './src/events/feedback';
+import NotificationEventHandler from './src/events/notification';
 import RecommendationEngineEventHandler from './src/events/recommendationEngine';
 import DailyRolloutEventHandler from './src/events/rollOutMenuItem';
 import DailyMenuItemEventHandler from './src/events/dailyMenuItem';
@@ -33,6 +34,9 @@ io.on('connection', (socket) => {
 
   const dailyMenuItemEventHandler = new DailyMenuItemEventHandler(socket);
   dailyMenuItemEventHandler.listen();
+
+  const notificationEventHandler = new NotificationEventHandler(socket);
+  notificationEventHandler.listen();
 });
 
 

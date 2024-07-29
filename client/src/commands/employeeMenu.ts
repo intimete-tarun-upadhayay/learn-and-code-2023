@@ -5,12 +5,14 @@ import MenuItemService from "../services/menuItem";
 import FeedbackService from "../services/feedback";
 import DailyMenuService from "../services/dailyMenuItem";
 import RollOutMenuItemService from "../services/rollOutMenuItem";
+import NotificationService from "../services/notification";
 
 const prompt = PromptSync();
 let menuItemService: MenuItemService;
 let feedbackService: FeedbackService;
 let rollOutMenuItemService: RollOutMenuItemService;
 let dailyMenuService: DailyMenuService;
+let notificationService: NotificationService;
 
 export default function handleEmpMenuAction(io: Socket,username:string) {
   console.log(`
@@ -24,6 +26,8 @@ export default function handleEmpMenuAction(io: Socket,username:string) {
   feedbackService = new FeedbackService(io);
   rollOutMenuItemService = new RollOutMenuItemService(io);
   dailyMenuService = new DailyMenuService(io);
+  notificationService = new NotificationService(io);
+  dailyMenuService = new DailyMenuService(io);
   const adminAction = prompt("Choose Option from above : ");
   switch (adminAction) {
     case "1":
@@ -33,7 +37,7 @@ export default function handleEmpMenuAction(io: Socket,username:string) {
       createFeeback(io,username);
       break;
     case "3":
-      // updateMenuItem(io);
+      viewNotifications(io,username);
       break;
     case "4":
       getRecommendedFoodItems(io,username);
@@ -41,7 +45,6 @@ export default function handleEmpMenuAction(io: Socket,username:string) {
     case "5":
       exit();
     default:
-      // This should never happen since `action` is of type `MenuAction`
       console.log("Unknown action");
       break;
   }
@@ -81,8 +84,23 @@ const seeMenuItem = async (io: Socket,username:string) => {
 };
 
 const createFeeback = async (io: Socket,username:string) => {
-  
   try {
+    console.log(`
+      1. Breakfast
+      2. Lunch
+      3. Dinner
+      `);
+  const foodItemType = prompt("Choose Food Item Type: ");
+  const foodItemList = await dailyMenuService.getDailyMenuItemById(+foodItemType,username);
+  const foodItems = foodItemList[0].map(async (item: any, index: number) => {
+    const menuItem = await menuItemService.getMenuItemById(item.foodItemId);
+    return {
+      id: item.foodItemId,
+      name: menuItem,
+      type: item.foodItemTypeId,
+    };
+  });
+  console.table(foodItems);
     const userId = prompt("Enter User ID : ");
     const foodItemId = prompt("Enter Food Item ID : ");
     const rating = prompt("Enter Rating between 1-5 : ");
@@ -166,3 +184,20 @@ const getRecommendedFoodItems = async (io: Socket,username:string) => {
     console.error("Error:", error.message);
   }
 };
+
+const viewNotifications = async (io: Socket,username:string) => {
+  try {
+    const notifications = await notificationService.getNotificationsByDate(username);
+    const notificationDisplay = notifications[0].map((item: any, index: number) => {
+      return {
+        message: item.message,
+        date: item.date,
+        itemName: item.itemName,
+      };
+    });
+    console.table(notificationDisplay);
+    handleEmpMenuAction(io,username);
+  } catch (error) {
+    console.error("Error in Getting Notification Item:", error.message);
+  }
+}

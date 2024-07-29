@@ -1,60 +1,43 @@
 import pool from '../../src/config/connection';
 
 class DailyMenuItemsService {
-    async createDailyMenuItem(menuId:number, foodItemTypeId:number,username:string) {
+    async createDailyMenuItem(menuId:number, foodItemTypeId:number,userId: string) {
         try {
             const connect = pool.getConnection();
-            const data = await pool.query(`insert into UserFoodChoose (userId,foodItemId,foodItemTypeId) values('${username}','${menuId}','${foodItemTypeId}')`);
+            const data = await pool.query(`insert into UserFoodChoose (userId,foodItemId,foodItemTypeId) values('${userId}','${menuId}','${foodItemTypeId}')`);
             (await connect).release();
         } catch (error) {
             throw new Error(error.message);
         }
     }
 
-    async getDailyMenuItems() {
+    async getDailyMenuItems(userId: string) {
         try {
-            // const dailyMenuItems = await DailyMenuItems.findAll();
-            // return dailyMenuItems;
+            const connect = pool.getConnection();
+            const data = await pool.query(`SELECT * FROM UserFoodChoose WHERE DATE(currentDate) = CURDATE() AND userId = '${userId}'`);
+            return data;
+            (await connect).release();
         } catch (error) {
             throw new Error(error.message);
         }
     }
 
-    async getDailyMenuItemById(id: number) {
+    async getDailyMenuItemByFoodTypeId(foodItemTypeId: number,userId: string) {
         try {
-            // const dailyMenuItem = await DailyMenuItems.findByPk(id);
-            // if (!dailyMenuItem) {
-            //     throw new Error("Daily menu item not found");
-            // }
-            // return dailyMenuItem;
+            const connect = pool.getConnection();
+            const data = await pool.query(`SELECT * FROM UserFoodChoose WHERE foodItemTypeId = ${foodItemTypeId} AND DATE(currentDate) = CURDATE() AND userId = '${userId}'`);
+            return data;
+            (await connect).release();
         } catch (error) {
             throw new Error(error.message);
         }
     }
 
-    async updateDailyMenuItem(id: number, menu_id: number, item_id: number, quantity_prepared: number) {
+    async deleteDailyMenuItem(foodItemTypeId: number,userId: string) {
         try {
-            // const dailyMenuItem = await DailyMenuItems.findByPk(id);
-            // if (!dailyMenuItem) {
-            //     throw new Error("Daily menu item not found");
-            // }
-            // dailyMenuItem.menu_id = menu_id;
-            // dailyMenuItem.item_id = item_id;
-            // dailyMenuItem.quantity_prepared = quantity_prepared;
-            // await dailyMenuItem.save();
-            // return dailyMenuItem;
-        } catch (error) {
-            throw new Error(error.message);
-        }
-    }
-
-    async deleteDailyMenuItem(id: number) {
-        try {
-            // const dailyMenuItem = await DailyMenuItems.findByPk(id);
-            // if (!dailyMenuItem) {
-            //     throw new Error("Daily menu item not found");
-            // }
-            // await dailyMenuItem.destroy();
+            const connect = pool.getConnection();
+            const data = await pool.query(`SELECT * FROM UserFoodChoose WHERE foodItemTypeId = ${foodItemTypeId} AND DATE(currentDate) = CURDATE() AND userId = '${userId}'`);
+            (await connect).release();
         } catch (error) {
             throw new Error(error.message);
         }

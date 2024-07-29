@@ -7,5 +7,9 @@ export interface MenuItem {
     name: string;
     price: number;
     availability_status: number;
-    foodItemTypeId:number
+    foodItemTypeId:number;
+    dietarypreference:string;
+    spiceLevel:string;
+    statePreference:string;
+    isSweet:string;
 }
