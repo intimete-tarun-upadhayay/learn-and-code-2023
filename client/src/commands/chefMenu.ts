@@ -3,6 +3,8 @@ import { Socket } from "socket.io-client";
 import { exit } from "process";
 import RecommendationEngineServices from "../services/recommendationEngine";
 import RollOutMenuItemService from "../services/rollOutMenuItem";
+import MenuItemService from "../services/menuItem";
+import NotificationService from "../services/notification";
 import FeedbackService from "../services/feedback";
 import DailyMenuItemService from "../services/dailyMenuItem";
 
@@ -10,7 +12,9 @@ const prompt = PromptSync();
 let recommendationEngineServices: RecommendationEngineServices;
 let rollOutMenuItemService: RollOutMenuItemService;
 let feedbackService: FeedbackService;
-let dailyMenu:DailyMenuItemService;
+let dailyMenu: DailyMenuItemService;
+let menuItemService: MenuItemService;
+let notificationService: NotificationService;
 
 export default function handleChefMenuAction(io: Socket) {
   console.log(`
@@ -23,6 +27,8 @@ export default function handleChefMenuAction(io: Socket) {
   recommendationEngineServices = new RecommendationEngineServices(io);
   rollOutMenuItemService = new RollOutMenuItemService(io);
   feedbackService = new FeedbackService(io);
+  menuItemService = new MenuItemService(io);
+  notificationService = new NotificationService(io);
   const adminAction = prompt("Choose Option from above : ");
   switch (adminAction) {
     case "1":
@@ -88,8 +94,15 @@ const showDiscardedMenuItem = async (io: Socket) => {
   );
   console.log("Selected Food Item :- ");
   console.table(selectedFoodItems);
-  let data = await recommendationEngineServices.addDiscardedMenuItem(selectedFoodItems[0]);
-  console.log(data);
+  await recommendationEngineServices.addDiscardedMenuItem(selectedFoodItems[0]);
+  const deleteItem = prompt("Do you want to delete this item? (Yes - 1/No - 0) : ");
+  if (deleteItem === '1') {
+    const deleteMenuItem = await menuItemService.deleteMenuItem(+selectedFoodItems[0].id);
+    console.log('Menu item deleted successfully');
+    const foodItemName = (foodItem as any)[0][0].itemName;
+    const notification = await notificationService.createNotification({ notification_data: `Food Item ${foodItemName} deleted from Menu`, itemName: foodItemName });
+    console.log('Notification sent successfully');
+  }
   handleChefMenuAction(io);
 };
 
